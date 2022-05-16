@@ -1,3 +1,2 @@
 # Ncurse_Platformer_Game
-# Ncurse_Platformer_Game
-# Ncurse_Platformer_Game
+Ncurses 라이브러리를 이용한 터미널 플랫포머 게임
