@@ -21,6 +21,12 @@ void Actor::draw(){
 
 }
 
+// 이전 좌표를 저장한다. 
+void Actor::backup_pos(){
+    this->prev_xpos = this->xpos; 
+    this->prev_ypos = this->ypos; 
+}
+
 //이쪽에서 충돌 체크를 진행 할까
 void Actor::actor_move(int ypos, int xpos){
     this->ypos = ypos; 

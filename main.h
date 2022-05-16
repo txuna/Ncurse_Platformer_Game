@@ -11,7 +11,7 @@
 #include <chrono>
 #include <thread>
 
-#define MS_PER_TICK 1000 / 60 
+#define MS_PER_TICK 1000 / 60
 
 #define WIDTH 60    //60
 #define HEIGHT 20   //20 
@@ -84,6 +84,7 @@ class Actor : public Node{
         int get_prev_xpos(); 
         int get_prev_ypos();
         chtype get_texture();
+        void backup_pos();
         //virtual void is_collision(); // Actor 간의 충돌 체크
 };
 
