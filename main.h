@@ -29,6 +29,7 @@
 #define C_YPOS (LINES-HEIGHT)/2  //중심좌표
 
 #define GRAVITY 1
+#define JUMP 5
 
 // Rendering은 맵 -> 플레이어,몬스터 렌더링 순으로 진행
 // Node 클래스로부터 모두 상속받음 -> update메소드 virtual -> 물체 tick마다 update진행 
@@ -85,6 +86,7 @@ class Actor : public Node{
         std::string name; 
         bool is_jump; 
         int jump_height;
+        bool is_floor;
     public:
         Actor(int ypos, int xpos, chtype texture);
         virtual ~Actor();

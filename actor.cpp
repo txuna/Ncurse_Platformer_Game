@@ -9,6 +9,8 @@ Actor::Actor(int ypos, int xpos, chtype texture){
     this->set_position(ypos, xpos);
     this->texture = texture; 
     this->jump_height = 0;
+    this->is_floor = false;
+    this->is_jump = false;
 }
 
 Actor::~Actor(){

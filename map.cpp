@@ -38,6 +38,8 @@ void MapWin::draw(){
         wattron(win, COLOR_PAIR(1));
         mvwaddch(win, obj_y, obj_x, texture); //새로운 플레이어 좌표 이전 좌표 지워야함
         wattroff(win, COLOR_PAIR(1));
+        mvprintw(3, 3, "(%d:%d)", obj_y, obj_x);
+        refresh();
     } 
     box(this->win, 0, 0);
 }

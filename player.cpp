@@ -17,8 +17,8 @@ void Player::update(){
         int ch = getch();
         // if is_on_floor()  
         if(ch == KEY_UP){
-            if(!is_jump){
-                is_jump = true;
+            if(!this->is_jump && this->is_floor){
+                this->is_jump = true;
             }
         }
         if(ch == KEY_LEFT){
@@ -28,14 +28,23 @@ void Player::update(){
             this->velocity->x = 1;
         }
     }
-    // 임시적인 변수 velocity를 두고 actor_move에서 충돌체크하고 실질적으로 움직일 수 있는지 확인
-    // 중력 적용
-    if(this->ypos + this->velocity->y < 18){
-        this->velocity->y = GRAVITY;
-        //this->velocity->y += GRAIVITY; // 원래는 이건데 터미널은 소수점을 표현못해서 ㅎㅎ
+    if(is_jump){
+        this->velocity->y = -JUMP;
+        is_jump = false;
     }else{
-        this->velocity->y = 0;
+        //중력 적용
+        if(this->ypos + this->velocity->y < 18){
+            this->velocity->y = GRAVITY;
+            this->is_floor = false;
+            //this->velocity->y += GRAIVITY; // 원래는 이건데 터미널은 소수점을 표현못해서 ㅎㅎ
+        }else{
+            this->velocity->y = 0;
+            this->is_floor = true;
+        }
     }
+
+
+
     this->actor_move(this->velocity);
 }
 
