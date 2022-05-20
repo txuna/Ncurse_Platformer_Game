@@ -13,6 +13,10 @@
 
 #define MS_PER_TICK 1000 / 60
 
+#define Y_POS 1
+#define X_POS 2
+#define YX_POS 3 
+
 #define WIDTH 60    //60
 #define HEIGHT 20   //20 
 
@@ -24,11 +28,15 @@
 #define C_XPOS (COLS-WIDTH)/2    //중심좌표 
 #define C_YPOS (LINES-HEIGHT)/2  //중심좌표
 
+#define GRAVITY 1
+
 // Rendering은 맵 -> 플레이어,몬스터 렌더링 순으로 진행
 // Node 클래스로부터 모두 상속받음 -> update메소드 virtual -> 물체 tick마다 update진행 
 // 맵 안에 객체가 존재한다면 해당 객체는 특정 틱마다 update 메소드 호출
 class Node{
     protected:
+        int xpos; 
+        int ypos;
         bool visibility;
         int type; 
         /*계층적 구조 | 해당 노드의 하위에 속하는 노드들*/
@@ -42,6 +50,9 @@ class Node{
         int get_node_type(); 
         void set_visible(bool flag); 
         bool get_visible(); 
+        void set_position(int ypos, int xpos);
+        int get_xpos();
+        int get_ypos();
 };
 
 // 객체 관리 및 게임진행 관련 클래스
@@ -61,13 +72,15 @@ class GameManager : public Node{
         void load_map();
 };
 
+class Velocity{
+    public:
+        int y; 
+        int x; 
+        Velocity(int y, int x);
+};
 
 class Actor : public Node{
     protected:
-        int xpos; //start position x
-        int ypos; //start position y
-        int prev_xpos; 
-        int prev_ypos; 
         chtype texture; //game character 
         std::string name; 
         bool is_jump; 
@@ -78,21 +91,17 @@ class Actor : public Node{
         // Actor 입장에서는 actor_move 반영 및 render 
         virtual void update();
         virtual void draw();
-        void actor_move(int ypos, int xpos); 
-        int get_xpos(); 
-        int get_ypos();
-        int get_prev_xpos(); 
-        int get_prev_ypos();
+        void actor_move(Velocity* velocity); 
         chtype get_texture();
-        void backup_pos();
-        //virtual void is_collision(); // Actor 간의 충돌 체크
 };
+
 
 class Player : public Actor{
     private:
         int level; 
         int hp; 
         int current_hp; 
+        Velocity* velocity;
     public:
         Player(int ypos, int xpos, chtype texture); 
         virtual ~Player();
@@ -130,6 +139,7 @@ class MapWin : public Node{
         virtual void update();
         virtual void draw(); //특정 fps마다 맵에서 draw() 진행
         WINDOW* get_win();
+        void clear_obj(Node* node); 
 };
 
 class TutorialMap : public MapWin{

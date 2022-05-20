@@ -58,14 +58,3 @@ void GameManager::draw(){
     //가상화면으로 전송된 출력 데이터를 실제 물리화면으로 전송한다.
     doupdate();
 }
-/*
-void GameManager::move_map(){
-    int temp_x; 
-    int temp_y; 
-    WINDOW* map_win = panel_window(this->win_panel[0]);
-    getbegyx(map_win, temp_y, temp_x); 
-    temp_x+=1; 
-    //mvwin(map_win, temp_y, temp_x);
-    //move_panel(this->win_panel[0], temp_y, temp_x);
-}
-*/
