@@ -26,10 +26,11 @@ void Actor::draw(){
 }
 
 //https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection -
-//충돌체크 
+//Collision Box도 이동
 void Actor::actor_move(Velocity* velocity){
     this->xpos += velocity->x; 
     this->ypos += velocity->y; 
+
 }
 
 

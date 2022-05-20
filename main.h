@@ -17,8 +17,8 @@
 #define X_POS 2
 #define YX_POS 3 
 
-#define WIDTH 60    //60
-#define HEIGHT 20   //20 
+#define WIDTH 120    //60
+#define HEIGHT 40   //20 
 
 // Window 객체를가지고 있는 클래스 
 #define T_WIN true 
@@ -29,11 +29,15 @@
 #define C_YPOS (LINES-HEIGHT)/2  //중심좌표
 
 #define GRAVITY 1
-#define JUMP 5
+#define JUMP 8
+#define SPEED 1
 
 // Rendering은 맵 -> 플레이어,몬스터 렌더링 순으로 진행
 // Node 클래스로부터 모두 상속받음 -> update메소드 virtual -> 물체 tick마다 update진행 
 // 맵 안에 객체가 존재한다면 해당 객체는 특정 틱마다 update 메소드 호출
+/*
+    종속된 노드는 상위 노드가 움직일 시 같이 이동
+*/
 class Node{
     protected:
         int xpos; 
@@ -73,6 +77,19 @@ class GameManager : public Node{
         void load_map();
 };
 
+class Collision : public Node{
+    private:
+        bool is_collision; 
+        int width; 
+        int height; 
+    public:
+        Collision(int ypos, int xpos); 
+        ~Collision(); 
+        void enable_collision(bool flag);
+        void move_collision(int ypos, int xpos); 
+
+};
+
 class Velocity{
     public:
         int y; 
@@ -100,9 +117,8 @@ class Actor : public Node{
 
 class Player : public Actor{
     private:
-        int level; 
-        int hp; 
-        int current_hp; 
+        // 현재 키를 누르고 있는지 확인
+        bool is_key_pressed;
         Velocity* velocity;
     public:
         Player(int ypos, int xpos, chtype texture); 
@@ -152,6 +168,10 @@ class TutorialMap : public MapWin{
         TutorialMap();
         ~TutorialMap();
 };
+
+
+
+
 
 void init();
 int kbhit(); 

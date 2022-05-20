@@ -12,28 +12,42 @@ Player::~Player(){
 //여기에 키 입력?
 // 매 프레임마다 업데이트 Godot을 치면 _process 느낌
 void Player::update(){
-    this->velocity->x = 0;
+    // 하위 종속 객체 update 
+    /*
+    for(auto const& obj : this->sub_objects){
+        obj->update();
+    }
+    */
+    //this->velocity->x = 0; 한번의 키로 쭉 진행
     if(kbhit()){
-        int ch = getch();
-        // if is_on_floor()  
-        if(ch == KEY_UP){
+        int ch = getch(); 
+        if(ch == KEY_LEFT){
+            this->velocity->x = -SPEED; 
+        }
+        else if(ch == KEY_RIGHT){
+            this->velocity->x = SPEED;
+        }
+        else if(ch == KEY_UP){
             if(!this->is_jump && this->is_floor){
                 this->is_jump = true;
             }
         }
-        if(ch == KEY_LEFT){
-            this->velocity->x = -1; 
-        }
-        if(ch == KEY_RIGHT){
-            this->velocity->x = 1;
+        else if(ch == KEY_DOWN){
+            this->velocity->x = 0;
         }
     }
-    if(is_jump){
-        this->velocity->y = -JUMP;
-        is_jump = false;
+    
+    if(this->is_jump){
+        if(this->jump_height >= JUMP){
+            this->is_jump = false; 
+            this->jump_height = 0;
+        }else{
+            this->velocity->y = -SPEED; 
+            this->jump_height += 1; 
+        }
     }else{
         //중력 적용
-        if(this->ypos + this->velocity->y < 18){
+        if(this->ypos + this->velocity->y < HEIGHT-2){
             this->velocity->y = GRAVITY;
             this->is_floor = false;
             //this->velocity->y += GRAIVITY; // 원래는 이건데 터미널은 소수점을 표현못해서 ㅎㅎ
@@ -43,9 +57,8 @@ void Player::update(){
         }
     }
 
-
-
     this->actor_move(this->velocity);
+    //collision->move_collision(this->ypos, this->xpos);
 }
 
 void Player::draw(){

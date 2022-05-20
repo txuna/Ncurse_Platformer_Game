@@ -1,7 +1,6 @@
 #include "main.h"
 
 Node::Node(){
-
 }
 
 Node::~Node(){

@@ -3,19 +3,18 @@
 //매 프레임마다 호출되는 update함수이다. 해당 객체가 visible하다면 하위객체 update를 진행한다.
 //업데이트후 렌더링 작업 실시
 void MapWin::update(){
-    //자체 WINDOW가 없는 하위 객체들은 update만 진행
     if(!this->visibility){
         return;
     }
     // 하위 종속 객체 update 
     for(auto const& obj : this->sub_objects){
-        // 객체 업데이트 전 지우기 
         this->clear_obj(obj);
         obj->update();
     }
     this->draw();
 }
 
+// 이전텍스쳐 삭제
 void MapWin::clear_obj(Node* node){
     int node_x = node->get_xpos(); 
     int node_y = node->get_ypos(); 
@@ -26,6 +25,7 @@ void MapWin::clear_obj(Node* node){
 // 렌더링의 순서는 상위계층부터 렌더링이 진행된다. 
 // 오브젝트 -> update , collision check -> draw 
 void MapWin::draw(){
+    box(this->win, 0, 0);
     for(auto const& obj : this->sub_objects){
         // visible하지 않는다면 렌더링 제외
         if(!obj->get_visible()){
@@ -41,7 +41,7 @@ void MapWin::draw(){
         mvprintw(3, 3, "(%d:%d)", obj_y, obj_x);
         refresh();
     } 
-    box(this->win, 0, 0);
+    
 }
 
 
