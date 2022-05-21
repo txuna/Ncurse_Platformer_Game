@@ -32,11 +32,24 @@ void Actor::draw(){
 void Actor::actor_move(Velocity* velocity){
     this->prev_xpos = this->xpos; 
     this->prev_ypos = this->ypos;
-    this->xpos += velocity->x; 
+    if(this->xpos + velocity->x + this->width >= WIDTH
+    || this->xpos + velocity->x <= 0){
+        this->xpos += 0; 
+    }else{
+        this->xpos += velocity->x; 
+    }
+    
     this->ypos += velocity->y; 
 
 }
 
 std::string Actor::get_texture(){
     return this->texture;
+}
+
+void Actor::set_canvas_win(WINDOW* canvas){
+    if(canvas == NULL){
+        return; 
+    }
+    this->canvas = canvas;
 }

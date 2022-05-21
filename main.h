@@ -120,6 +120,7 @@ class Actor : public Node{
         virtual void draw();
         void actor_move(Velocity* velocity); 
         std::string get_texture();
+        void set_canvas_win(WINDOW* canvas); 
 };
 
 

@@ -8,7 +8,6 @@ MapWin::MapWin(){
 
 MapWin::~MapWin(){
     delwin(this->win);
-    //del_panel(this->node_panels);
 }
 
 //매 프레임마다 호출되는 update함수이다. 해당 객체가 visible하다면 하위객체 update를 진행한다.

@@ -43,6 +43,7 @@ void Player::update(){
         if(this->jump_height >= JUMP){
             this->is_jump = false; 
             this->jump_height = 0;
+            this->is_floor = false;
         }else{
             this->velocity->y = -SPEED; 
             this->jump_height += 1; 
