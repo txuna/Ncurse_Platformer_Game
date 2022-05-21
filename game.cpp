@@ -9,7 +9,7 @@ GameManager::~GameManager(){
     for(auto const& obj : this->sub_objects){
         delete obj;
     }
-    del_panel(this->map_panel);
+    del_panel(this->node_panels);
 }
 
 //맵클래스를 객체화시킨다음 하위계층에 편입시킨다. 
@@ -18,7 +18,8 @@ void GameManager::load_map(){
     TutorialMap* tutorial_map = new TutorialMap();
     tutorial_map->set_visible(true);
     this->sub_objects.push_back((Node*)tutorial_map); 
-    this->map_panel = new_panel(tutorial_map->get_win());
+    // 맵의 window를 상위 노드의 패널에 연결
+    this->node_panels = new_panel(tutorial_map->get_win());
 }
 /*
 void GameManager::load_inventory(){
@@ -41,18 +42,15 @@ void GameManager::update(){
 */
 void GameManager::draw(){
     for(auto const& obj : this->sub_objects){
-        // Window 객체를 가지지 않는다면 렌더링 속성에서 배제
-        if(obj->get_node_type() != T_WIN){
-            return;
-        }
         // obj 마다 index속성 부여 해야할듯
         if(obj->get_visible()){
-            show_panel(this->map_panel);
+            obj->draw();
+            show_panel(this->node_panels);
         }else{
-            hide_panel(this->map_panel);
+            hide_panel(this->node_panels);
         }
     }
-    wrefresh(panel_window(this->map_panel));
+    wrefresh(panel_window(this->node_panels));
     //패널에 대한 변경사항(패널 내부의 렌더작업) 최종적으로 가상화면으로 전송한다. 
     update_panels();
     //가상화면으로 전송된 출력 데이터를 실제 물리화면으로 전송한다.

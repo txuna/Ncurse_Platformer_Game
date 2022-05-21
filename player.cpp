@@ -1,13 +1,15 @@
 #include "main.h"
 
-Player::Player(int ypos, int xpos, chtype texture)
-    :Actor(ypos, xpos, texture)
+Player::Player(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas)
+    :Actor(ypos, xpos, height, width, texture, canvas)
 {
     velocity = new Velocity(0, 0);
+    this->type = T_NON_WIN;
 }
 
 Player::~Player(){
     delete velocity;
+    delwin(win);
 }
 //여기에 키 입력?
 // 매 프레임마다 업데이트 Godot을 치면 _process 느낌
@@ -47,7 +49,7 @@ void Player::update(){
         }
     }else{
         //중력 적용
-        if(this->ypos + this->velocity->y < HEIGHT-2){
+        if(this->ypos + this->velocity->y + this->height < HEIGHT-2){
             this->velocity->y = GRAVITY;
             this->is_floor = false;
             //this->velocity->y += GRAIVITY; // 원래는 이건데 터미널은 소수점을 표현못해서 ㅎㅎ
@@ -62,5 +64,9 @@ void Player::update(){
 }
 
 void Player::draw(){
-
+    std::string stuff(this->width, ' ');
+    mvwaddstr(this->canvas, this->prev_ypos, this->prev_xpos, stuff.c_str());
+    mvwaddstr(this->canvas,  this->ypos, this->xpos, this->texture.c_str());
+    mvprintw(1, 1, "(%d:%d)", this->ypos, this->xpos);
+    refresh();
 }

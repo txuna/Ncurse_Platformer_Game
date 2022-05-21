@@ -15,10 +15,6 @@ void Node::draw(){
 
 }
 
-int Node::get_node_type(){
-    return this->type;
-}
-
 
 void Node::set_visible(bool flag){
     this->visibility = flag;
@@ -33,10 +29,24 @@ void Node::set_position(int ypos, int xpos){
     this->xpos = xpos;
 }
 
+void Node::set_size(int height, int width){
+    this->height = height; 
+    this->width = width;
+}
+
 int Node::get_xpos(){
     return this->xpos; 
 }
 
 int Node::get_ypos(){
     return this->ypos;
+}
+
+
+WINDOW* Node::get_win(){
+    return this->win;
+}
+
+int Node::get_node_type(){
+    return this->type;
 }

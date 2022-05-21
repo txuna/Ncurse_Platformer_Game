@@ -17,6 +17,7 @@ int main(void){
 }
 
 void init(){
+    setlocale(LC_ALL, "");
     initscr(); 
     start_color();
     noecho(); 
