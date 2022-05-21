@@ -7,11 +7,15 @@ Collision::Collision(int ypos, int xpos, int height, int width){
     this->set_visible(false);
     this->is_collision = true;
     this->is_pass = false;
-    this->type = T_NON_WIN;
+    this->type = COLLISION;
 }
 
 Collision::~Collision(){
 
+}
+
+bool Collision::collision_state(){
+    return this->is_collision;
 }
 
 void Collision::enable_collision(bool flag){

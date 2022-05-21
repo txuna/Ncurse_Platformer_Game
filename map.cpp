@@ -27,8 +27,12 @@ void MapWin::update(){
     // Collision Check 
     // Actor만이 Collision을 가짐
     for(auto const& checker : this->sub_objects){
+        // Actor가 아니라면 
         if(checker->get_node_type() != ACTOR) continue;
+        // 충돌상태가 비활성화 상태라면
+        if(!((Actor*)checker)->collision->collision_state()) continue;
         for(auto const& victim : this->sub_objects){
+            // Actor가 아니라면
             if(checker->get_node_type() != ACTOR) continue;
             // 동일한 객체
             if(checker->get_id() == victim->get_id()) continue;
@@ -38,7 +42,9 @@ void MapWin::update(){
             
             // 충돌 계산 
             if(has_collision(checker, victim)){
-                ((Actor*)checker)->occur_collision();
+                // Callback 호출
+                // 구조물이 아닌 몬스터의 경우 오버래핑 한번의 충돌이면 되므로 음 ... 무적시간? 
+                ((Actor*)checker)->occur_collision((Actor*)victim);
             }
         }
     }

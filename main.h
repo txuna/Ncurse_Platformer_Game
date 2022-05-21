@@ -40,6 +40,7 @@
 #define MAP 1 
 #define ACTOR 2 
 #define UI 3
+#define COLLISION 4
 
 
 class Velocity{
@@ -118,6 +119,7 @@ class Collision : public Node{
         char get_mask(); 
         char get_layer();
         bool check_mask(char victim_layer);
+        bool collision_state();
 };
 
 class Actor : public Node{
@@ -142,7 +144,7 @@ class Actor : public Node{
         void actor_move(Velocity* velocity); 
         std::string get_texture();
         void set_canvas_win(WINDOW* canvas); 
-        void occur_collision();
+        void occur_collision(Actor* subject);
 };
 
 

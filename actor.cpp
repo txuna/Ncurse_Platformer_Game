@@ -58,7 +58,8 @@ void Actor::set_canvas_win(WINDOW* canvas){
     this->canvas = canvas;
 }
 
-void Actor::occur_collision(){
-    mvprintw(1, 30, "COLLISION!");
+// 충돌시 어떤 객체와 충돌했는지
+void Actor::occur_collision(Actor* subject){
+    mvprintw(1, 30, "COLLISION! %d", subject->get_id());
     refresh();
 }
