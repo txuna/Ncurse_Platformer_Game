@@ -4,11 +4,11 @@ Player::Player(int ypos, int xpos, int height, int width, std::string texture, W
     :Actor(ypos, xpos, height, width, texture, canvas)
 {
     this->velocity = new Velocity(0, 0);
-    this->type = T_NON_WIN;
+    this->collision->set_layer(PLAYER_LAYER, MONSTER_LAYER);
 }
 
 Player::~Player(){
-    delete velocity;
+    delete this->velocity;
 }
 //여기에 키 입력?
 // 매 프레임마다 업데이트 Godot을 치면 _process 느낌
@@ -67,9 +67,19 @@ void Player::update(){
 }
 
 void Player::draw(){
+    /*
+    // 하위 객체 렌더링
+    for(auto const& obj : this->sub_objects){
+        if(!obj->get_visible()){
+            continue;
+        }
+        obj->draw();
+    }
+    */
     std::string stuff(this->width, ' ');
     mvwaddstr(this->canvas, this->prev_ypos, this->prev_xpos, stuff.c_str());
     mvwaddstr(this->canvas,  this->ypos, this->xpos, this->texture.c_str());
-    mvprintw(1, 1, "(%d:%d)", this->ypos, this->xpos);
+    mvprintw(1, 1, "Player : (%d:%d)", this->ypos, this->xpos);
+    mvprintw(2, 1, "Collision : (%d:%d)", this->collision->get_ypos(), this->collision->get_xpos());
     refresh();
 }

@@ -13,10 +13,15 @@ Actor::Actor(int ypos, int xpos, int height, int width, std::string texture, WIN
     this->is_floor = false;
     this->is_jump = false;
     this->canvas = canvas;
+    this->type = ACTOR;
+    this->collision = new Collision(ypos, xpos, height, width);
+    this->sub_objects.push_back((Node*)this->collision);
 }
 
 Actor::~Actor(){
-    
+    for(auto const& obj : this->sub_objects){
+        delete obj;
+    }
 }
 
 void Actor::update(){
@@ -35,7 +40,11 @@ void Actor::actor_move(Velocity* velocity){
 
     this->xpos += velocity->x;
     this->ypos += velocity->y; 
-
+    
+    // 상위객체가 이동하면 하위객체도 같은 거리만큼 이동
+    for(auto const& obj : this->sub_objects){
+        obj->transform_position(velocity);
+    }
 }
 
 std::string Actor::get_texture(){
@@ -47,4 +56,9 @@ void Actor::set_canvas_win(WINDOW* canvas){
         return; 
     }
     this->canvas = canvas;
+}
+
+void Actor::occur_collision(){
+    mvprintw(1, 30, "COLLISION!");
+    refresh();
 }

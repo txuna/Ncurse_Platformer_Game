@@ -1,5 +1,7 @@
 #include "main.h"
 
+int NODE_INDEX=0;
+
 bool running = true;
 
 int main(void){
@@ -17,6 +19,7 @@ int main(void){
 }
 
 void init(){
+    NODE_INDEX = 1;
     setlocale(LC_ALL, "");
     initscr(); 
     start_color();
@@ -36,4 +39,25 @@ int kbhit()
     FD_ZERO(&fds);
     FD_SET(0, &fds);
     return select(1, &fds, NULL, NULL, &tv) > 0;
+}
+
+bool has_collision(Node* r1, Node* r2){
+    int r1_x = r1->get_xpos(); 
+    int r1_y = r1->get_ypos();
+    int r1_w = r1->get_width(); 
+    int r1_h = r1->get_height();
+
+    int r2_x = r2->get_xpos(); 
+    int r2_y = r2->get_ypos(); 
+    int r2_w = r2->get_width(); 
+    int r2_h = r2->get_height();
+
+    if (r1_x < r2_x + r2_w 
+        && r1_x + r1_w > r2_x 
+        && r1_y < r2_y + r2_h 
+        && r1_h + r1_y > r2_y){
+            return true; 
+    }else{
+        return false;
+    }
 }

@@ -12,7 +12,7 @@
 #include <thread>
 #include <locale.h>
 
-#define MS_PER_TICK 1000 / 60
+#define MS_PER_TICK 1000 / 45
 
 #define Y_POS 1
 #define X_POS 2
@@ -33,14 +33,32 @@
 #define JUMP 8
 #define SPEED 1
 
+#define PLAYER_LAYER 1 
+#define MONSTER_LAYER 2 
+#define STRUCTURE_LAYER 4
+
+#define MAP 1 
+#define ACTOR 2 
+#define UI 3
+
+
+class Velocity{
+    public:
+        int y; 
+        int x; 
+        Velocity(int y, int x);
+};
+
 // Rendering은 맵 -> 플레이어,몬스터 렌더링 순으로 진행
 // Node 클래스로부터 모두 상속받음 -> update메소드 virtual -> 물체 tick마다 update진행 
 // 맵 안에 객체가 존재한다면 해당 객체는 특정 틱마다 update 메소드 호출
 /*
     종속된 노드는 상위 노드가 움직일 시 같이 이동
 */
+
 class Node{
     protected:
+        int id;
         WINDOW* win;
         int xpos; 
         int ypos;
@@ -64,15 +82,18 @@ class Node{
         void set_size(int height, int width);
         int get_xpos();
         int get_ypos();
+        int get_width();
+        int get_height();
         WINDOW* get_win();
         int get_node_type();
-
+        void transform_position(Velocity* velocity);
+        int get_id();
 };
 
 // 객체 관리 및 게임진행 관련 클래스
 class GameManager : public Node{
     private:
-        int test;  
+
     public:
         GameManager(); 
         virtual ~GameManager(); 
@@ -84,21 +105,19 @@ class GameManager : public Node{
 class Collision : public Node{
     private:
         bool is_collision; 
-        int width; 
-        int height; 
+        char layer; // 자기 자신이 속한 레이어 
+        char mask;  // 충돌체크할 레이어 
+        bool is_pass; // 충돌후 통과 가능 여부
     public:
-        Collision(int ypos, int xpos); 
-        ~Collision(); 
+        Collision(int ypos, int xpos, int height, int width); 
+        virtual ~Collision(); 
         void enable_collision(bool flag);
-        void move_collision(int ypos, int xpos); 
-
-};
-
-class Velocity{
-    public:
-        int y; 
-        int x; 
-        Velocity(int y, int x);
+        virtual void update(); 
+        virtual void draw();
+        void set_layer(char layer, char mask);
+        char get_mask(); 
+        char get_layer();
+        bool check_mask(char victim_layer);
 };
 
 class Actor : public Node{
@@ -112,7 +131,9 @@ class Actor : public Node{
         WINDOW* canvas; // 그려질 맵 WINDOW;
         int prev_xpos; 
         int prev_ypos; 
+        
     public:
+        Collision* collision; 
         Actor(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas);
         virtual ~Actor();
         // Actor 입장에서는 actor_move 반영 및 render 
@@ -121,6 +142,7 @@ class Actor : public Node{
         void actor_move(Velocity* velocity); 
         std::string get_texture();
         void set_canvas_win(WINDOW* canvas); 
+        void occur_collision();
 };
 
 
@@ -146,6 +168,18 @@ class Monster : public Actor{
         virtual void update(); 
         virtual void draw();
 };
+/*
+class Wall : public Actor{
+    private:
+        Velocity* velocity;
+        int direction; 
+    public:
+        Wall(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
+        virtual ~Wall(); 
+        virtual void update(); 
+        virtual void draw();
+};
+*/
 
 /*
 class Npc : public Actor{
@@ -176,6 +210,6 @@ class TutorialMap : public MapWin{
 
 
 
-
+bool has_collision(Node* r1, Node* r2); 
 void init();
 int kbhit(); 

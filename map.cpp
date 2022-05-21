@@ -4,6 +4,8 @@ MapWin::MapWin(){
     this->win = newwin(HEIGHT, WIDTH, C_YPOS, C_XPOS); 
     box(this->win, 0, 0); //WIN box border
     wrefresh(this->win);
+    this->set_position(C_YPOS, C_XPOS); 
+    this->set_size(HEIGHT, WIDTH);
 }
 
 MapWin::~MapWin(){
@@ -21,6 +23,26 @@ void MapWin::update(){
     for(auto const& obj : this->sub_objects){
         obj->update();
     }
+
+    // Collision Check 
+    // Actor만이 Collision을 가짐
+    for(auto const& checker : this->sub_objects){
+        if(checker->get_node_type() != ACTOR) continue;
+        for(auto const& victim : this->sub_objects){
+            if(checker->get_node_type() != ACTOR) continue;
+            // 동일한 객체
+            if(checker->get_id() == victim->get_id()) continue;
+            //checker의 layer와 victim의 mask에 & 연산 - Collision 대상인지 확인
+            //즉, Victom이 Checker의 충돌대상인지 확인한 다음 충돌중인지 확인
+            if(!((Actor*)checker)->collision->check_mask(((Actor*)victim)->collision->get_layer())) continue; 
+            
+            // 충돌 계산 
+            if(has_collision(checker, victim)){
+                ((Actor*)checker)->occur_collision();
+            }
+        }
+    }
+    // Object Draw
     this->draw();
 }
 
@@ -48,7 +70,7 @@ void MapWin::draw(){
 */
 TutorialMap::TutorialMap(){
     /* setup map */
-    this->type = T_WIN;
+    this->type = MAP;
     /* Spawning Monster */
     Monster* monster = new Monster(3, 20, 1, 7, "(●'◡'●)",this->win);
     monster->set_visible(true);

@@ -1,7 +1,11 @@
 #include "main.h"
 
+extern int NODE_INDEX;
+
 Node::Node(){
     this->visibility = true;
+    this->id = NODE_INDEX;
+    NODE_INDEX+=1;
 }
 
 Node::~Node(){
@@ -43,6 +47,13 @@ int Node::get_ypos(){
     return this->ypos;
 }
 
+int Node::get_width(){
+    return this->width;
+}
+
+int Node::get_height(){
+    return this->height;
+}
 
 WINDOW* Node::get_win(){
     return this->win;
@@ -50,4 +61,13 @@ WINDOW* Node::get_win(){
 
 int Node::get_node_type(){
     return this->type;
+}
+
+void Node::transform_position(Velocity* velocity){
+    this->xpos += velocity->x;
+    this->ypos += velocity->y; 
+}
+
+int Node::get_id(){
+    return this->id;
 }

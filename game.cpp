@@ -1,7 +1,9 @@
 #include "main.h"
 
-GameManager::GameManager(){
 
+GameManager::GameManager(){
+    this->set_position(0, 0); 
+    this->set_size(0, 0);
 }
 
 // sub_object delete 
