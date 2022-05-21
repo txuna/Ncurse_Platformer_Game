@@ -3,13 +3,12 @@
 Player::Player(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas)
     :Actor(ypos, xpos, height, width, texture, canvas)
 {
-    velocity = new Velocity(0, 0);
+    this->velocity = new Velocity(0, 0);
     this->type = T_NON_WIN;
 }
 
 Player::~Player(){
     delete velocity;
-    delwin(win);
 }
 //여기에 키 입력?
 // 매 프레임마다 업데이트 Godot을 치면 _process 느낌
@@ -59,9 +58,12 @@ void Player::update(){
             this->is_floor = true;
         }
     }
-
+    // 벽 
+    if(this->xpos + velocity->x + this->width >= WIDTH
+    || this->xpos + velocity->x <= 0){
+        velocity->x = 0; 
+    }
     this->actor_move(this->velocity);
-    //collision->move_collision(this->ypos, this->xpos);
 }
 
 void Player::draw(){

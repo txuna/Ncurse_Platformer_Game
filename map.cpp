@@ -49,11 +49,15 @@ void MapWin::draw(){
 TutorialMap::TutorialMap(){
     /* setup map */
     this->type = T_WIN;
+    /* Spawning Monster */
+    Monster* monster = new Monster(3, 20, 1, 7, "(●'◡'●)",this->win);
+    monster->set_visible(true);
+    this->sub_objects.push_back((Node*)monster);
     /* Spawning Player */
     Player* player = new Player(3, 3, 1, 5, "(•_•)", this->win);
     player->set_visible(true);
     this->sub_objects.push_back((Node*)player);
-    /* Spawning Monster */
+
 }
 
 TutorialMap::~TutorialMap(){

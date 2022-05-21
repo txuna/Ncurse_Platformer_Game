@@ -32,13 +32,8 @@ void Actor::draw(){
 void Actor::actor_move(Velocity* velocity){
     this->prev_xpos = this->xpos; 
     this->prev_ypos = this->ypos;
-    if(this->xpos + velocity->x + this->width >= WIDTH
-    || this->xpos + velocity->x <= 0){
-        this->xpos += 0; 
-    }else{
-        this->xpos += velocity->x; 
-    }
-    
+
+    this->xpos += velocity->x;
     this->ypos += velocity->y; 
 
 }

@@ -127,7 +127,6 @@ class Actor : public Node{
 class Player : public Actor{
     private:
         // 현재 키를 누르고 있는지 확인
-        bool is_key_pressed;
         Velocity* velocity;
     public:
         Player(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
@@ -136,20 +135,18 @@ class Player : public Actor{
         virtual void draw();
 };
 
-/*
+
 class Monster : public Actor{
     private:
-        int level; 
-        int hp; 
-        int current_hp; 
-    
+        Velocity* velocity;
+        int direction; 
     public:
-        Monster(); 
+        Monster(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
         virtual ~Monster(); 
-        void monster_move(); 
-        void update(); 
+        virtual void update(); 
+        virtual void draw();
 };
-*/
+
 /*
 class Npc : public Actor{
 

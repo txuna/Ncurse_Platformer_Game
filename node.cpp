@@ -1,6 +1,7 @@
 #include "main.h"
 
 Node::Node(){
+    this->visibility = true;
 }
 
 Node::~Node(){
