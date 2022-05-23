@@ -14,6 +14,10 @@
 
 #define MS_PER_TICK 1000 / 45
 
+#define INVINCIBLE true  
+#define VINCIBLE false 
+#define INVINCIBLE_TIME 45 //1.5초동안 무적시간
+
 #define Y_POS 1
 #define X_POS 2
 #define YX_POS 3 
@@ -35,7 +39,7 @@
 
 #define PLAYER_LAYER 1 
 #define MONSTER_LAYER 2 
-#define STRUCTURE_LAYER 4
+#define BOX_LAYER 4
 
 #define MAP 1 
 #define ACTOR 2 
@@ -67,6 +71,8 @@ class Node{
         int height;
         bool visibility;
         int type; 
+        int prev_xpos; 
+        int prev_ypos; 
         // 일단은 임시로 패널 한개만 담기 가능 추후 realloc같은걸로 지속적 할당 예정
         PANEL* node_panels; 
         /*계층적 구조 | 해당 노드의 하위에 속하는 노드들*/
@@ -89,6 +95,19 @@ class Node{
         int get_node_type();
         void transform_position(Velocity* velocity);
         int get_id();
+        void rollback_pos();
+};
+
+class Label : public Node{
+    private:
+        std::string name;
+        WINDOW* canvas;
+    public:
+        Label(std::string name, int ypos, int xpos, int height, int width, WINDOW* canvas);
+        virtual ~Label(); 
+        virtual void update(); 
+        virtual void draw();
+        void set_name(std::string name);
 };
 
 // 객체 관리 및 게임진행 관련 클래스
@@ -131,8 +150,8 @@ class Actor : public Node{
         int jump_height;
         bool is_floor;
         WINDOW* canvas; // 그려질 맵 WINDOW;
-        int prev_xpos; 
-        int prev_ypos; 
+        //int prev_xpos; 
+        //int prev_ypos; 
         
     public:
         Collision* collision; 
@@ -144,7 +163,8 @@ class Actor : public Node{
         void actor_move(Velocity* velocity); 
         std::string get_texture();
         void set_canvas_win(WINDOW* canvas); 
-        void occur_collision(Actor* subject);
+        virtual void occur_collision(Actor* subject);
+        //void rollback_pos(); 
 };
 
 
@@ -152,11 +172,17 @@ class Player : public Actor{
     private:
         // 현재 키를 누르고 있는지 확인
         Velocity* velocity;
+        int test;
+        bool is_invincible; 
+        int invincible_duration; 
+        Label* label;
     public:
         Player(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
         virtual ~Player();
         virtual void update(); 
         virtual void draw();
+        virtual void occur_collision(Actor* subject);
+        bool get_invincible();
 };
 
 
@@ -164,24 +190,26 @@ class Monster : public Actor{
     private:
         Velocity* velocity;
         int direction; 
+        Label* label;
     public:
         Monster(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
         virtual ~Monster(); 
         virtual void update(); 
         virtual void draw();
+        virtual void occur_collision(Actor* subject);
 };
-/*
-class Wall : public Actor{
+
+class Box : public Actor{
     private:
         Velocity* velocity;
-        int direction; 
     public:
-        Wall(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
-        virtual ~Wall(); 
+        Box(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
+        virtual ~Box(); 
         virtual void update(); 
         virtual void draw();
+        virtual void occur_collision(Actor* subject);
 };
-*/
+
 
 /*
 class Npc : public Actor{

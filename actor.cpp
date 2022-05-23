@@ -16,6 +16,8 @@ Actor::Actor(int ypos, int xpos, int height, int width, std::string texture, WIN
     this->type = ACTOR;
     this->collision = new Collision(ypos, xpos, height, width);
     this->sub_objects.push_back((Node*)this->collision);
+    this->prev_xpos = xpos; 
+    this->prev_ypos = ypos;
 }
 
 Actor::~Actor(){
@@ -59,7 +61,16 @@ void Actor::set_canvas_win(WINDOW* canvas){
 }
 
 // 충돌시 어떤 객체와 충돌했는지
+// is_pass가 아니라면 이전위치로 이동?
 void Actor::occur_collision(Actor* subject){
-    mvprintw(1, 30, "COLLISION! %d", subject->get_id());
-    refresh();
+
 }
+
+/*
+//충돌시 이전위치로 이동한다. 
+void Actor::rollback_pos(){
+    this->xpos = this->prev_xpos; 
+    this->ypos = this->prev_ypos;
+}
+
+*/

@@ -77,14 +77,21 @@ void MapWin::draw(){
 TutorialMap::TutorialMap(){
     /* setup map */
     this->type = MAP;
+    /* Spawning Box */
+    Box* box = new Box(25, 20, 10, 40, "*", this->win);
+    box->set_visible(true); 
+    this->sub_objects.push_back((Node*)box);
+
     /* Spawning Monster */
-    Monster* monster = new Monster(3, 20, 1, 7, "(●'◡'●)",this->win);
+    Monster* monster = new Monster(3, 40, 1, 7, "(●'◡'●)",this->win);
     monster->set_visible(true);
     this->sub_objects.push_back((Node*)monster);
+
     /* Spawning Player */
     Player* player = new Player(3, 3, 1, 5, "(•_•)", this->win);
     player->set_visible(true);
     this->sub_objects.push_back((Node*)player);
+
 
 }
 

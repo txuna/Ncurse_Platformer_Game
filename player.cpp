@@ -4,7 +4,11 @@ Player::Player(int ypos, int xpos, int height, int width, std::string texture, W
     :Actor(ypos, xpos, height, width, texture, canvas)
 {
     this->velocity = new Velocity(0, 0);
-    this->collision->set_layer(PLAYER_LAYER, MONSTER_LAYER);
+    this->collision->set_layer(PLAYER_LAYER, MONSTER_LAYER|BOX_LAYER);
+    this->is_invincible = false; 
+    this->invincible_duration = 0;
+    this->label = new Label("tuuna", ypos-2, xpos, height, width, canvas);
+    this->sub_objects.push_back((Node*)this->label);
 }
 
 Player::~Player(){
@@ -19,6 +23,16 @@ void Player::update(){
         obj->update();
     }
     */
+    // 무적 루틴 해제 및 설정 
+    if(this->is_invincible){
+        if(this->invincible_duration >= INVINCIBLE_TIME){
+            this->is_invincible = false; 
+            this->invincible_duration = 0;
+        }
+        else{
+            this->invincible_duration += 1;
+        }
+    }
     //this->velocity->x = 0; 한번의 키로 쭉 진행
     if(kbhit()){
         int ch = getch(); 
@@ -59,15 +73,14 @@ void Player::update(){
         }
     }
     // 벽 
-    if(this->xpos + velocity->x + this->width >= WIDTH
-    || this->xpos + velocity->x <= 0){
-        velocity->x = 0; 
+    if(this->xpos + this->velocity->x + this->width >= WIDTH
+    || this->xpos + this->velocity->x <= 0){
+        this->velocity->x = 0; 
     }
     this->actor_move(this->velocity);
 }
 
 void Player::draw(){
-    /*
     // 하위 객체 렌더링
     for(auto const& obj : this->sub_objects){
         if(!obj->get_visible()){
@@ -75,11 +88,39 @@ void Player::draw(){
         }
         obj->draw();
     }
-    */
     std::string stuff(this->width, ' ');
     mvwaddstr(this->canvas, this->prev_ypos, this->prev_xpos, stuff.c_str());
     mvwaddstr(this->canvas,  this->ypos, this->xpos, this->texture.c_str());
     mvprintw(1, 1, "Player : (%d:%d)", this->ypos, this->xpos);
     mvprintw(2, 1, "Collision : (%d:%d)", this->collision->get_ypos(), this->collision->get_xpos());
     refresh();
+}
+
+
+/*
+몬스터를 만날시 1.5초간 무적 상태를 설정한다. 
+그렇다고 해서 충돌 패스를 하는것은 아니다. 
+player에 속해있는 객체도 롤백해야한다. 
+*/
+void Player::occur_collision(Actor* subject){
+    // 하위객체도 롤백
+    for(auto const& obj : this->sub_objects){
+        obj->rollback_pos();
+    }
+    this->rollback_pos();
+    int collision_layer = subject->collision->get_layer(); 
+    if(collision_layer==MONSTER_LAYER){
+        if(this->is_invincible){
+            return; 
+        }
+        this->is_invincible = true;
+    }
+    
+    mvprintw(1, 30, "Num Of COLLISION! %d", this->test);
+    this->test+=1;
+    refresh();
+}
+
+bool Player::get_invincible(){
+    return this->is_invincible;
 }

@@ -64,10 +64,17 @@ int Node::get_node_type(){
 }
 
 void Node::transform_position(Velocity* velocity){
+    this->prev_xpos = this->xpos; 
+    this->prev_ypos = this->ypos;
     this->xpos += velocity->x;
     this->ypos += velocity->y; 
 }
 
 int Node::get_id(){
     return this->id;
+}
+
+void Node::rollback_pos(){
+    this->xpos = this->prev_xpos; 
+    this->ypos = this->prev_ypos;
 }

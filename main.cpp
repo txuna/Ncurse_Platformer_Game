@@ -27,6 +27,7 @@ void init(){
     keypad(stdscr, TRUE); 
     cbreak();   
     init_pair(1, COLOR_CYAN, COLOR_BLACK);
+    init_pair(2, COLOR_RED, COLOR_BLACK);
     curs_set(0);
     refresh();
     
