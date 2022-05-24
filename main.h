@@ -46,6 +46,8 @@
 #define UI 3
 #define COLLISION 4
 
+#define LR_SIDE 1 
+#define BT_SIDE 2 
 
 class Velocity{
     public:
@@ -61,18 +63,25 @@ class Velocity{
     종속된 노드는 상위 노드가 움직일 시 같이 이동
 */
 
+class Position{
+    public:
+        int x;
+        int y;
+        Position(); 
+        Position(int x, int y); 
+        ~Position();
+};
+
 class Node{
     protected:
         int id;
         WINDOW* win;
-        int xpos; 
-        int ypos;
+        Position pos; 
+        Position prev_pos;
         int width; 
         int height;
         bool visibility;
         int type; 
-        int prev_xpos; 
-        int prev_ypos; 
         // 일단은 임시로 패널 한개만 담기 가능 추후 realloc같은걸로 지속적 할당 예정
         PANEL* node_panels; 
         /*계층적 구조 | 해당 노드의 하위에 속하는 노드들*/
@@ -89,6 +98,8 @@ class Node{
         void set_size(int height, int width);
         int get_xpos();
         int get_ypos();
+        int get_prev_xpos();
+        int get_prev_ypos();
         int get_width();
         int get_height();
         WINDOW* get_win();
@@ -96,6 +107,8 @@ class Node{
         void transform_position(Velocity* velocity);
         int get_id();
         void rollback_pos();
+        void rollback_xpos(); 
+        void rollback_ypos();
 };
 
 class Label : public Node{
@@ -164,7 +177,7 @@ class Actor : public Node{
         std::string get_texture();
         void set_canvas_win(WINDOW* canvas); 
         virtual void occur_collision(Actor* subject);
-        //void rollback_pos(); 
+        int get_collision_side(Actor* subject); 
 };
 
 
@@ -239,7 +252,8 @@ class TutorialMap : public MapWin{
 
 
 
-
-bool has_collision(Node* r1, Node* r2); 
+// 선분 충돌 확인
+//bool IsIntersecting(Position a, Position b, Position c, Position d); 
+bool has_collision(Actor* r1, Actor* r2); 
 void init();
 int kbhit(); 

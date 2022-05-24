@@ -30,8 +30,8 @@ bool Node::get_visible(){
 }
 
 void Node::set_position(int ypos, int xpos){
-    this->ypos = ypos; 
-    this->xpos = xpos;
+    pos.y = ypos; 
+    pos.x = xpos; 
 }
 
 void Node::set_size(int height, int width){
@@ -40,11 +40,19 @@ void Node::set_size(int height, int width){
 }
 
 int Node::get_xpos(){
-    return this->xpos; 
+    return this->pos.x; 
 }
 
 int Node::get_ypos(){
-    return this->ypos;
+    return this->pos.y;
+}
+
+int Node::get_prev_xpos(){
+    return this->prev_pos.x; 
+}
+
+int Node::get_prev_ypos(){
+    return this->prev_pos.y; 
 }
 
 int Node::get_width(){
@@ -64,10 +72,10 @@ int Node::get_node_type(){
 }
 
 void Node::transform_position(Velocity* velocity){
-    this->prev_xpos = this->xpos; 
-    this->prev_ypos = this->ypos;
-    this->xpos += velocity->x;
-    this->ypos += velocity->y; 
+    this->prev_pos.x = this->pos.x; 
+    this->prev_pos.y = this->pos.y;
+    this->pos.x += velocity->x; 
+    this->pos.y += velocity->y; 
 }
 
 int Node::get_id(){
@@ -75,6 +83,14 @@ int Node::get_id(){
 }
 
 void Node::rollback_pos(){
-    this->xpos = this->prev_xpos; 
-    this->ypos = this->prev_ypos;
+    this->pos.x = this->prev_pos.x; 
+    this->pos.y = this->prev_pos.y;
+}
+
+void Node::rollback_xpos(){
+    this->pos.x = this->prev_pos.x; 
+}
+
+void Node::rollback_ypos(){
+    this->pos.y = this->prev_pos.y;
 }

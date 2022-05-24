@@ -14,8 +14,8 @@ void Box::update(){
 }
 
 void Box::draw(){
-    int x = this->xpos; 
-    int y = this->ypos; 
+    int x = this->pos.x;
+    int y = this->pos.y;
     int w = this->width; 
     int h = this->height;
 

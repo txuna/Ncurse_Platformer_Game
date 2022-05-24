@@ -41,7 +41,7 @@ void MapWin::update(){
             if(!((Actor*)checker)->collision->check_mask(((Actor*)victim)->collision->get_layer())) continue; 
             
             // 충돌 계산 
-            if(has_collision(checker, victim)){
+            if(has_collision((Actor*)checker, (Actor*)victim)){
                 // Callback 호출
                 // 구조물이 아닌 몬스터의 경우 오버래핑 한번의 충돌이면 되므로 음 ... 무적시간? 
                 ((Actor*)checker)->occur_collision((Actor*)victim);
@@ -78,9 +78,21 @@ TutorialMap::TutorialMap(){
     /* setup map */
     this->type = MAP;
     /* Spawning Box */
-    Box* box = new Box(25, 20, 10, 40, "*", this->win);
+    Box* box = new Box(25, 20, 3, 40, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box);
+
+    Box* box2 = new Box(10, 10, 3, 40, "*", this->win);
+    box->set_visible(true); 
+    this->sub_objects.push_back((Node*)box2);
+
+    Box* box3 = new Box(35, 50, 3, 40, "*", this->win);
+    box->set_visible(true); 
+    this->sub_objects.push_back((Node*)box3);
+
+    Box* box4 = new Box(20, 80, 3, 20, "*", this->win);
+    box->set_visible(true); 
+    this->sub_objects.push_back((Node*)box4);
 
     /* Spawning Monster */
     Monster* monster = new Monster(3, 40, 1, 7, "(●'◡'●)",this->win);

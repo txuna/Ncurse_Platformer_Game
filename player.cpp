@@ -63,7 +63,7 @@ void Player::update(){
         }
     }else{
         //중력 적용
-        if(this->ypos + this->velocity->y + this->height < HEIGHT-2){
+        if(this->pos.y + this->velocity->y + this->height < HEIGHT-2){
             this->velocity->y = GRAVITY;
             this->is_floor = false;
             //this->velocity->y += GRAIVITY; // 원래는 이건데 터미널은 소수점을 표현못해서 ㅎㅎ
@@ -73,8 +73,8 @@ void Player::update(){
         }
     }
     // 벽 
-    if(this->xpos + this->velocity->x + this->width >= WIDTH
-    || this->xpos + this->velocity->x <= 0){
+    if(this->pos.x + this->velocity->x + this->width >= WIDTH
+    || this->pos.x + this->velocity->x <= 0){
         this->velocity->x = 0; 
     }
     this->actor_move(this->velocity);
@@ -89,9 +89,9 @@ void Player::draw(){
         obj->draw();
     }
     std::string stuff(this->width, ' ');
-    mvwaddstr(this->canvas, this->prev_ypos, this->prev_xpos, stuff.c_str());
-    mvwaddstr(this->canvas,  this->ypos, this->xpos, this->texture.c_str());
-    mvprintw(1, 1, "Player : (%d:%d)", this->ypos, this->xpos);
+    mvwaddstr(this->canvas, this->prev_pos.y, this->prev_pos.x, stuff.c_str());
+    mvwaddstr(this->canvas,  this->pos.y, this->pos.x, this->texture.c_str());
+    mvprintw(1, 1, "Player : (%d:%d)", this->pos.y, this->pos.x);
     mvprintw(2, 1, "Collision : (%d:%d)", this->collision->get_ypos(), this->collision->get_xpos());
     refresh();
 }
@@ -104,10 +104,25 @@ player에 속해있는 객체도 롤백해야한다.
 */
 void Player::occur_collision(Actor* subject){
     // 하위객체도 롤백
-    for(auto const& obj : this->sub_objects){
-        obj->rollback_pos();
+    /*
+
+    */
+    int bit = this->get_collision_side(subject);
+    if(bit & LR_SIDE){
+        mvprintw(1, 50, "X COLLISION!");
+        this->rollback_xpos(); 
+        for(auto const& obj : this->sub_objects){
+            obj->rollback_xpos();
+        }
     }
-    this->rollback_pos();
+    if(bit & BT_SIDE){
+        mvprintw(1, 80, "Y COLLISION!");
+        this->rollback_ypos(); 
+        for(auto const& obj : this->sub_objects){
+            obj->rollback_ypos();
+        }
+    }
+    refresh();
     int collision_layer = subject->collision->get_layer(); 
     if(collision_layer==MONSTER_LAYER){
         if(this->is_invincible){

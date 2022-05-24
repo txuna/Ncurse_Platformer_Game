@@ -42,16 +42,16 @@ int kbhit()
     return select(1, &fds, NULL, NULL, &tv) > 0;
 }
 
-bool has_collision(Node* r1, Node* r2){
-    int r1_x = r1->get_xpos(); 
-    int r1_y = r1->get_ypos();
-    int r1_w = r1->get_width(); 
-    int r1_h = r1->get_height();
+bool has_collision(Actor* r1, Actor* r2){
+    int r1_x = r1->collision->get_xpos(); 
+    int r1_y = r1->collision->get_ypos();
+    int r1_w = r1->collision->get_width(); 
+    int r1_h = r1->collision->get_height();
 
-    int r2_x = r2->get_xpos(); 
-    int r2_y = r2->get_ypos(); 
-    int r2_w = r2->get_width(); 
-    int r2_h = r2->get_height();
+    int r2_x = r2->collision->get_xpos(); 
+    int r2_y = r2->collision->get_ypos(); 
+    int r2_w = r2->collision->get_width(); 
+    int r2_h = r2->collision->get_height();
 
     if (r1_x < r2_x + r2_w 
         && r1_x + r1_w > r2_x 
@@ -62,3 +62,20 @@ bool has_collision(Node* r1, Node* r2){
         return false;
     }
 }
+
+/*
+bool IsIntersecting(Position a, Position b, Position c, Position d)
+{
+    float denominator = ((b.X - a.X) * (d.Y - c.Y)) - ((b.Y - a.Y) * (d.X - c.X));
+    float numerator1 = ((a.Y - c.Y) * (d.X - c.X)) - ((a.X - c.X) * (d.Y - c.Y));
+    float numerator2 = ((a.Y - c.Y) * (b.X - a.X)) - ((a.X - c.X) * (b.Y - a.Y));
+
+    // Detect coincident lines (has a problem, read below)
+    if (denominator == 0) return numerator1 == 0 && numerator2 == 0;
+    
+    float r = numerator1 / denominator;
+    float s = numerator2 / denominator;
+
+    return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
+}
+*/

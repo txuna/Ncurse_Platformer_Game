@@ -18,13 +18,13 @@ Monster::~Monster(){
 void Monster::update(){
     //LEFT
     this->velocity->x = SPEED * this->direction;
-    if(this->xpos + this->velocity->x + this->width >= WIDTH
-    || this->xpos + this->velocity->x <= 0){
+    if(this->pos.x + this->velocity->x + this->width >= WIDTH
+    || this->pos.x + this->velocity->x <= 0){
         this->velocity->x = 0; 
         this->direction = this->direction * -1;
     }
     //중력 적용
-    if(this->ypos + this->velocity->y + this->height < HEIGHT-2){
+    if(this->pos.y + this->velocity->y + this->height < HEIGHT-2){
         this->velocity->y = GRAVITY;
     }else{
         this->velocity->y = 0;
@@ -41,9 +41,9 @@ void Monster::draw(){
         obj->draw();
     }
     std::string stuff(this->width, ' ');
-    mvwaddstr(this->canvas, this->prev_ypos, this->prev_xpos, stuff.c_str());
-    mvwaddstr(this->canvas,  this->ypos, this->xpos, this->texture.c_str());
-    mvprintw(4, 1, "Monster : (%d:%d)", this->ypos, this->xpos);
+    mvwaddstr(this->canvas, this->prev_pos.y, this->prev_pos.x, stuff.c_str());
+    mvwaddstr(this->canvas,  this->pos.y, this->pos.x, this->texture.c_str());
+    mvprintw(4, 1, "Monster : (%d:%d)", this->pos.y, this->pos.x);
     //mvprintw(5, 1, "Collision : (%d:%d)", this->collision->get_ypos(), this->collision->get_xpos());
     refresh();
 }
@@ -53,16 +53,27 @@ void Monster::draw(){
 */
 void Monster::occur_collision(Actor* subject){
     // 하위객체도 롤백
+    /*
     for(auto const& obj : this->sub_objects){
         obj->rollback_pos();
     }
-    //this->ypos = this->prev_ypos;
-    this->rollback_pos();
+    */
+    int bit = this->get_collision_side(subject);
+    if(bit & LR_SIDE){
+        this->rollback_xpos(); 
+        for(auto const& obj : this->sub_objects){
+            obj->rollback_xpos();
+        }
+    }
+    if(bit & BT_SIDE){
+        this->rollback_ypos(); 
+        for(auto const& obj : this->sub_objects){
+            obj->rollback_ypos();
+        }
+    }
     int collision_layer = subject->collision->get_layer(); 
     if(collision_layer == PLAYER_LAYER){
         // 무적상태라면 충돌 체크 X 
         if(((Player*)subject)->get_invincible()) return;
     }
-    // 사이드 충돌일 때 
-    //this->direction = this->direction * -1;
 }
