@@ -1,3 +1,5 @@
 a.out 
 test*.cpp
 test*.c
+*.o
+play
