@@ -78,21 +78,25 @@ TutorialMap::TutorialMap(){
     /* setup map */
     this->type = MAP;
     /* Spawning Box */
-    Box* box = new Box(25, 20, 3, 40, "*", this->win);
+    Box* box = new Box(35, 20, 4, 30, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box);
 
-    Box* box2 = new Box(10, 10, 3, 40, "*", this->win);
+    Box* box2 = new Box(27, 60, 12, 8, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box2);
 
-    Box* box3 = new Box(30, 50, 3, 40, "*", this->win);
+    Box* box3 = new Box(34, 90, 5, 20, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box3);
 
-    Box* box4 = new Box(15, 80, 3, 20, "*", this->win);
+    Box* box4 = new Box(29, 76, 3, 25, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box4);
+
+    Box* box5 = new Box(24, 2, 2, 42, "*", this->win);
+    box->set_visible(true); 
+    this->sub_objects.push_back((Node*)box5);
 
     /* Spawning Monster */
     Monster* monster = new Monster(3, 40, 1, 7, "(●'◡'●)",this->win);

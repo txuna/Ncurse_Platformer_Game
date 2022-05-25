@@ -104,14 +104,6 @@ player에 속해있는 객체도 롤백해야한다.
 */
 void Player::occur_collision(Actor* subject){
     int bit = this->get_collision_side(subject);
-    // 하위객체도 롤백
-    for(auto const& obj : this->sub_objects){
-        if(bit & LR_SIDE){
-            obj->rollback_xpos();
-        }else if(bit & BT_SIDE){
-            obj->rollback_ypos();
-        }
-    }
 
     if(bit & LR_SIDE){
         this->rollback_xpos(); 
@@ -121,6 +113,17 @@ void Player::occur_collision(Actor* subject){
         this->rollback_ypos(); 
     }else{
         this->rollback_pos();
+    }
+
+    // 하위객체도 롤백
+    for(auto const& obj : this->sub_objects){
+        if(bit & LR_SIDE){
+            obj->rollback_xpos();
+        }else if(bit & BT_SIDE){
+            obj->rollback_ypos();
+        }else{
+            obj->rollback_pos();
+        }
     }
 
     int collision_layer = subject->collision->get_layer(); 

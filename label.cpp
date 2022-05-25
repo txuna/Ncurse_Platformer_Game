@@ -8,8 +8,6 @@ Label::Label(std::string name, int ypos, int xpos, int height, int width, WINDOW
     this->set_visible(true);
     this->prev_pos.x = xpos; 
     this->prev_pos.y = ypos; 
-    //this->prev_xpos = xpos; 
-    //this->prev_ypos = ypos;
 }
 
 Label::~Label(){
@@ -29,7 +27,9 @@ void Label::draw(){
     int y = this->pos.y;
     WINDOW* win = this->canvas;
     mvwprintw(win, py, px, stuff.c_str());
+    wattron(win, COLOR_PAIR(2));
     mvwprintw(win, y, x, this->name.c_str());
+    wattroff(win, COLOR_PAIR(2));
 }
 
 void Label::set_name(std::string name){
