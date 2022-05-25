@@ -86,11 +86,11 @@ TutorialMap::TutorialMap(){
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box2);
 
-    Box* box3 = new Box(35, 50, 3, 40, "*", this->win);
+    Box* box3 = new Box(30, 50, 3, 40, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box3);
 
-    Box* box4 = new Box(20, 80, 3, 20, "*", this->win);
+    Box* box4 = new Box(15, 80, 3, 20, "*", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box4);
 

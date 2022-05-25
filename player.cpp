@@ -103,26 +103,26 @@ void Player::draw(){
 player에 속해있는 객체도 롤백해야한다. 
 */
 void Player::occur_collision(Actor* subject){
-    // 하위객체도 롤백
-    /*
-
-    */
     int bit = this->get_collision_side(subject);
-    if(bit & LR_SIDE){
-        mvprintw(1, 50, "X COLLISION!");
-        this->rollback_xpos(); 
-        for(auto const& obj : this->sub_objects){
+    // 하위객체도 롤백
+    for(auto const& obj : this->sub_objects){
+        if(bit & LR_SIDE){
             obj->rollback_xpos();
-        }
-    }
-    if(bit & BT_SIDE){
-        mvprintw(1, 80, "Y COLLISION!");
-        this->rollback_ypos(); 
-        for(auto const& obj : this->sub_objects){
+        }else if(bit & BT_SIDE){
             obj->rollback_ypos();
         }
     }
-    refresh();
+
+    if(bit & LR_SIDE){
+        this->rollback_xpos(); 
+    }
+    else if(bit & BT_SIDE){
+        this->is_floor = true;
+        this->rollback_ypos(); 
+    }else{
+        this->rollback_pos();
+    }
+
     int collision_layer = subject->collision->get_layer(); 
     if(collision_layer==MONSTER_LAYER){
         if(this->is_invincible){

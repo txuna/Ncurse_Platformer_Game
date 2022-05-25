@@ -52,25 +52,25 @@ void Monster::draw(){
 몬스터는 충돌 발생시 기존방향과 반대로 이동
 */
 void Monster::occur_collision(Actor* subject){
-    // 하위객체도 롤백
-    /*
-    for(auto const& obj : this->sub_objects){
-        obj->rollback_pos();
-    }
-    */
     int bit = this->get_collision_side(subject);
-    if(bit & LR_SIDE){
-        this->rollback_xpos(); 
-        for(auto const& obj : this->sub_objects){
+    // 하위객체도 롤백
+    for(auto const& obj : this->sub_objects){
+        if(bit & LR_SIDE){
             obj->rollback_xpos();
-        }
-    }
-    if(bit & BT_SIDE){
-        this->rollback_ypos(); 
-        for(auto const& obj : this->sub_objects){
+        }else if(bit & BT_SIDE){
             obj->rollback_ypos();
         }
     }
+    if(bit & LR_SIDE){
+        this->rollback_xpos(); 
+        this->direction = direction * -1;
+    }
+    else if(bit & BT_SIDE){
+        this->rollback_ypos(); 
+    }else{
+        this->rollback_pos();
+    }
+
     int collision_layer = subject->collision->get_layer(); 
     if(collision_layer == PLAYER_LAYER){
         // 무적상태라면 충돌 체크 X 
