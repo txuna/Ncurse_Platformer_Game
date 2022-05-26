@@ -8,6 +8,7 @@ Collision::Collision(int ypos, int xpos, int height, int width){
     this->is_collision = true;
     this->is_pass = false;
     this->type = COLLISION;
+    this->set_node_name("Collision");
 }
 
 Collision::~Collision(){

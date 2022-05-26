@@ -1,9 +1,9 @@
 #include "main.h"
 
-Box::Box(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas)
-    :Actor(ypos, xpos, height, width, texture, canvas)
+Box::Box(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas)
+    :Actor(ypos, xpos, height, width, texture, node_name, canvas)
 {
-    this->collision->set_layer(BOX_LAYER, PLAYER_LAYER|MONSTER_LAYER|BOX_LAYER);
+    this->collision->set_layer(BOX_LAYER, SKILL_LAYER|PLAYER_LAYER|MONSTER_LAYER|BOX_LAYER);
 }
 
 Box::~Box(){

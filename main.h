@@ -40,6 +40,7 @@
 #define PLAYER_LAYER 1 
 #define MONSTER_LAYER 2 
 #define BOX_LAYER 4
+#define SKILL_LAYER 8
 
 #define MAP 1 
 #define ACTOR 2 
@@ -48,6 +49,9 @@
 
 #define LR_SIDE 1 
 #define BT_SIDE 2 
+
+#define LEFT -1 
+#define RIGHT 1
 
 class Velocity{
     public:
@@ -74,6 +78,7 @@ class Position{
 
 class Node{
     protected:
+        std::string node_name;
         int id;
         WINDOW* win;
         Position pos; 
@@ -82,8 +87,6 @@ class Node{
         int height;
         bool visibility;
         int type; 
-        // 일단은 임시로 패널 한개만 담기 가능 추후 realloc같은걸로 지속적 할당 예정
-        PANEL* node_panels; 
         /*계층적 구조 | 해당 노드의 하위에 속하는 노드들*/
         std::list<Node*> sub_objects;     
     public:
@@ -109,6 +112,9 @@ class Node{
         void rollback_pos();
         void rollback_xpos(); 
         void rollback_ypos();
+        void set_node_name(std::string node_name);
+        std::string get_node_name();
+        void append_node(Node* node);
 };
 
 class Label : public Node{
@@ -126,13 +132,15 @@ class Label : public Node{
 // 객체 관리 및 게임진행 관련 클래스
 class GameManager : public Node{
     private:
-
+        PANEL* node_panels[2]; 
     public:
         GameManager(); 
         virtual ~GameManager(); 
         virtual void update(); 
         virtual void draw();
         void load_map();
+        void load_scoreboard();
+        Node* get_node(std::string node_name);
 };
 
 class Collision : public Node{
@@ -168,7 +176,7 @@ class Actor : public Node{
         
     public:
         Collision* collision; 
-        Actor(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas);
+        Actor(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas);
         virtual ~Actor();
         // Actor 입장에서는 actor_move 반영 및 render 
         virtual void update();
@@ -189,13 +197,17 @@ class Player : public Actor{
         bool is_invincible; 
         int invincible_duration; 
         Label* label;
+        int direction;
+        int delay; 
+        bool is_attack;
     public:
-        Player(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
+        Player(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas); 
         virtual ~Player();
         virtual void update(); 
         virtual void draw();
         virtual void occur_collision(Actor* subject);
         bool get_invincible();
+        void shoot_fireball();
 };
 
 
@@ -205,7 +217,7 @@ class Monster : public Actor{
         int direction; 
         Label* label;
     public:
-        Monster(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
+        Monster(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas); 
         virtual ~Monster(); 
         virtual void update(); 
         virtual void draw();
@@ -216,10 +228,25 @@ class Box : public Actor{
     private:
         Velocity* velocity;
     public:
-        Box(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas); 
+        Box(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas); 
         virtual ~Box(); 
         virtual void update(); 
         virtual void draw();
+        virtual void occur_collision(Actor* subject);
+};
+
+
+class Fireball : public Actor{
+    private:
+        int distance; 
+        std::string ball; 
+        Velocity* velocity;
+        int direction; 
+    public:
+        Fireball(int direction, int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas);
+        virtual ~Fireball();
+        virtual void draw(); 
+        virtual void update();  
         virtual void occur_collision(Actor* subject);
 };
 
@@ -239,6 +266,7 @@ class MapWin : public Node{
         virtual ~MapWin();
         virtual void update();
         virtual void draw(); //특정 fps마다 맵에서 draw() 진행
+        
 };
 
 class TutorialMap : public MapWin{
@@ -250,6 +278,26 @@ class TutorialMap : public MapWin{
         ~TutorialMap();
 };
 
+/* HUD SYSTEM */
+class HUD : public Node{
+    private:
+    public:
+        HUD(); 
+        virtual ~HUD(); 
+        virtual void update(); 
+        virtual void draw();
+
+};
+
+class ScoreBoard : public HUD{
+    private:
+        int score; 
+        std::string name; 
+    public:
+        ScoreBoard(); 
+        virtual ~ScoreBoard();
+        virtual void draw();
+};
 
 
 // 선분 충돌 확인

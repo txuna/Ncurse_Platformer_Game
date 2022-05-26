@@ -12,6 +12,7 @@ MapWin::~MapWin(){
     delwin(this->win);
 }
 
+
 //매 프레임마다 호출되는 update함수이다. 해당 객체가 visible하다면 하위객체 update를 진행한다.
 //업데이트후 렌더링 작업 실시
 void MapWin::update(){
@@ -77,38 +78,37 @@ void MapWin::draw(){
 TutorialMap::TutorialMap(){
     /* setup map */
     this->type = MAP;
+    this->set_node_name("TutorialMap");
     /* Spawning Box */
-    Box* box = new Box(35, 20, 4, 30, "*", this->win);
+    Box* box = new Box(35, 20, 4, 30, "*", "Box1", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box);
 
-    Box* box2 = new Box(27, 60, 12, 8, "*", this->win);
+    Box* box2 = new Box(27, 60, 12, 8, "*", "Box2", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box2);
 
-    Box* box3 = new Box(34, 90, 5, 20, "*", this->win);
+    Box* box3 = new Box(34, 90, 5, 20, "*", "Box3", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box3);
 
-    Box* box4 = new Box(29, 76, 3, 25, "*", this->win);
+    Box* box4 = new Box(29, 76, 3, 25, "*", "Box4", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box4);
 
-    Box* box5 = new Box(24, 2, 2, 42, "*", this->win);
+    Box* box5 = new Box(24, 2, 2, 48, "*", "Box5", this->win);
     box->set_visible(true); 
     this->sub_objects.push_back((Node*)box5);
 
     /* Spawning Monster */
-    Monster* monster = new Monster(3, 40, 1, 7, "(●'◡'●)",this->win);
+    Monster* monster = new Monster(3, 40, 1, 7, "(●'◡'●)", "Monster1", this->win);
     monster->set_visible(true);
     this->sub_objects.push_back((Node*)monster);
 
     /* Spawning Player */
-    Player* player = new Player(3, 3, 1, 5, "(•_•)", this->win);
+    Player* player = new Player(3, 3, 1, 5, "(•_•)", "Player", this->win);
     player->set_visible(true);
     this->sub_objects.push_back((Node*)player);
-
-
 }
 
 TutorialMap::~TutorialMap(){

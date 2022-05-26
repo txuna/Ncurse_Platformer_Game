@@ -1,11 +1,11 @@
 #include "main.h"
 
-Monster::Monster(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas)
-    :Actor(ypos, xpos, height, width, texture, canvas)
+Monster::Monster(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas)
+    :Actor(ypos, xpos, height, width, texture, node_name, canvas)
 {
     this->velocity = new Velocity(0, 0);
     this->direction = 1;
-    this->collision->set_layer(MONSTER_LAYER, PLAYER_LAYER|BOX_LAYER|MONSTER_LAYER);
+    this->collision->set_layer(MONSTER_LAYER, SKILL_LAYER|PLAYER_LAYER|BOX_LAYER|MONSTER_LAYER);
     this->label = new Label("Monster", ypos-2, xpos, height, width, canvas);
     this->sub_objects.push_back((Node*)this->label);
 }

@@ -3,22 +3,26 @@
 int NODE_INDEX=0;
 
 bool running = true;
+GameManager* game_manager;
 
 int main(void){
     init(); 
     // 초기화 대기 시간
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    GameManager* game_manager = new GameManager();
+    //GameManager* game_manager = new GameManager();
     game_manager->load_map();
+    game_manager->load_scoreboard(); 
     while(running){
         game_manager->update();
         std::this_thread::sleep_for(std::chrono::milliseconds(MS_PER_TICK));
     }
     endwin(); 
+    delete game_manager;
     return 0;
 }
 
 void init(){
+    game_manager = new GameManager();
     NODE_INDEX = 1;
     setlocale(LC_ALL, "");
     initscr(); 

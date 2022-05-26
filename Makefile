@@ -1,7 +1,7 @@
 LDLIBS = -lncursesw -lpanelw 
 
-play : play actor.o box.o collision.o game.o label.o main.o map.o monster.o node.o player.o position.o $(LDLIBS)
-	g++ -g -o play actor.o box.o collision.o game.o label.o main.o map.o monster.o node.o player.o position.o $(LDLIBS)
+play : play actor.o box.o collision.o game.o label.o main.o map.o monster.o node.o player.o position.o hud.o fireball.o $(LDLIBS)
+	g++ -g -o play actor.o box.o collision.o game.o label.o main.o map.o monster.o node.o player.o position.o hud.o fireball.o $(LDLIBS)
 
 actor.o : main.h actor.cpp 
 	g++ -c -g actor.cpp 
@@ -32,6 +32,12 @@ player.o : main.h player.cpp
 
 position.o : main.h position.cpp 
 	g++ -c -g position.cpp 
+
+hud.o : main.h hud.cpp 
+	g++ -c -g hud.cpp
+
+fireball.o : main.h fireball.cpp 
+	g++ -c -g fireball.cpp 
 
 clean: 
 	rm *.o play

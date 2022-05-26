@@ -8,6 +8,7 @@ Label::Label(std::string name, int ypos, int xpos, int height, int width, WINDOW
     this->set_visible(true);
     this->prev_pos.x = xpos; 
     this->prev_pos.y = ypos; 
+    this->set_node_name("Label");
 }
 
 Label::~Label(){

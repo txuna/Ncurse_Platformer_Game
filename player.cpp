@@ -1,7 +1,9 @@
 #include "main.h"
 
-Player::Player(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas)
-    :Actor(ypos, xpos, height, width, texture, canvas)
+extern GameManager* game_manager; 
+
+Player::Player(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas)
+    :Actor(ypos, xpos, height, width, texture, node_name, canvas)
 {
     this->velocity = new Velocity(0, 0);
     this->collision->set_layer(PLAYER_LAYER, MONSTER_LAYER|BOX_LAYER);
@@ -9,14 +11,44 @@ Player::Player(int ypos, int xpos, int height, int width, std::string texture, W
     this->invincible_duration = 0;
     this->label = new Label("tuuna", ypos-2, xpos, height, width, canvas);
     this->sub_objects.push_back((Node*)this->label);
+    this->direction = RIGHT;
+    this->is_attack = false; 
+    this->delay = 0;
 }
 
 Player::~Player(){
     delete this->velocity;
 }
+
+void Player::shoot_fireball(){
+    Node* current_map_node = game_manager->get_node("TutorialMap"); 
+    if(current_map_node == NULL){
+        mvprintw(2, 90, "MAP ERROR");
+        refresh();
+        return;
+    }
+    std::string ch; 
+    if(this->direction == LEFT){
+        ch = "☜";
+    }else{
+        ch = "☞";
+    }
+    is_attack = true;
+    Fireball* fireball = new Fireball(this->direction, this->pos.y, this->pos.x+(1*this->direction), 1, 2, ch, this->canvas); 
+    fireball->set_visible(true);
+    current_map_node->append_node((Node*)fireball);
+}
+
 //여기에 키 입력?
 // 매 프레임마다 업데이트 Godot을 치면 _process 느낌
 void Player::update(){
+    if(this->is_attack){
+        if(this->delay >= 8){
+            this->is_attack = false;
+            this->delay=0;
+        }
+        this->delay+=1; 
+    }
     // 하위 종속 객체 update 
     /*
     for(auto const& obj : this->sub_objects){
@@ -38,9 +70,11 @@ void Player::update(){
         int ch = getch(); 
         if(ch == KEY_LEFT){
             this->velocity->x = -SPEED; 
+            this->direction = LEFT;
         }
         else if(ch == KEY_RIGHT){
             this->velocity->x = SPEED;
+            this->direction = RIGHT;
         }
         else if(ch == KEY_UP){
             if(!this->is_jump && this->is_floor){
@@ -49,6 +83,9 @@ void Player::update(){
         }
         else if(ch == KEY_DOWN){
             this->velocity->x = 0;
+        }else if(ch == 'a'){
+            if(this->is_attack) return;
+            this->shoot_fireball();
         }
     }
     

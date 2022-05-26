@@ -5,7 +5,7 @@ Velocity::Velocity(int y, int x){
     this->y = y;
 }
 
-Actor::Actor(int ypos, int xpos, int height, int width, std::string texture, WINDOW* canvas){
+Actor::Actor(int ypos, int xpos, int height, int width, std::string texture, std::string node_name, WINDOW* canvas){
     this->set_position(ypos, xpos);
     this->set_size(height, width);
     this->texture = texture; 
@@ -18,6 +18,7 @@ Actor::Actor(int ypos, int xpos, int height, int width, std::string texture, WIN
     this->sub_objects.push_back((Node*)this->collision);
     this->prev_pos.x = xpos; 
     this->prev_pos.y = ypos;
+    this->set_node_name(node_name);
 }
 
 Actor::~Actor(){
